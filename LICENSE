@@ -1,87 +1,128 @@
-Monada Dominion Non-Commercial No-Derivatives Source License (MD-NC-ND) v1.0
+Monada Dominion Non-Commercial No-Derivatives Source License (MD-NC-ND) v1.1
 
-IMPORTANT: THIS IS NOT AN OPEN SOURCE LICENSE. IT DOES NOT GRANT PERMISSION FOR COMMERCIAL USE OR FOR DISTRIBUTION OF MODIFIED VERSIONS. BY USING ANY PORTION OF THE LICENSED MATERIAL YOU ACCEPT THESE TERMS.
+IMPORTANT: THIS IS NOT AN OPEN SOURCE LICENSE. IT DOES NOT GRANT PERMISSION FOR COMMERCIAL USE, AI/ML TRAINING USE, OR DISTRIBUTION OF MODIFIED VERSIONS. BY ACCESSING, DOWNLOADING, COPYING, OR USING ANY PORTION OF THE LICENSED MATERIAL IN ANY WAY, YOU ACCEPT AND ARE BOUND BY THESE TERMS IN FULL. IF YOU DO NOT AGREE, DO NOT USE THE LICENSED MATERIAL.
 
 0. Definitions
-"Licensor" means the copyright holder(s) listed in the copyright notice(s).
-"Licensed Material" means the source code, build scripts, asset files, and accompanying documentation in this repository (the "Project").
+"Licensor" means Artur Kraskov, operating as Monada Dominion (KVK 87782324, Eindhoven, Netherlands), and any expressly designated successor rights holder.
 
-"Source Form" means the preferred form for making modifications, including all associated build or configuration files.
+"Licensed Material" means all source code, compiled outputs, build scripts, configuration files, infrastructure-as-code, asset files (including images, fonts, audio, video, and data files), written documentation, operational documents, design files, and any other files or content present in or released from this repository or any other repository owned or operated by the Licensor (collectively, the "Project").
 
-"Verbatim Copy" means an exact, unmodified copy of the Licensed Material, preserving all file contents and notices.
+"Source Form" means the preferred form for making modifications, including all associated build, configuration, and tooling files.
 
-"Non-Commercial Use" means any use that (a) is not conducted for or directed toward commercial advantage or monetary compensation; and (b) is not incorporated into, or used to provision, a product or service offered for a fee, subscription, advertising revenue, or other consideration. Academic research, personal study, internal evaluation by a non-profit organization, and classroom teaching are Non-Commercial Uses provided no fee is charged specifically for access to, or use of, the Licensed Material beyond cost-recovery for media or hosting.
+"Verbatim Copy" means an exact, unmodified copy of the Licensed Material preserving all file contents, directory structure, and embedded notices.
 
-"Commercial Use" means any use that is not Non-Commercial Use. Operating the Licensed Material (modified or unmodified) as part of a hosted or managed service for third parties is Commercial Use.
+"Non-Commercial Use" means any use that (a) is not conducted for or directed toward commercial advantage or monetary compensation of any kind; and (b) is not incorporated into, or used to provision, a product or service offered for a fee, subscription, advertising revenue, data monetization, or other consideration; and (c) does not benefit any for-profit entity's operations, products, or competitive positioning. Academic research, personal study, internal evaluation by a registered non-profit organization, and classroom instruction are Non-Commercial Uses provided no fee is charged specifically for access to, or use of, the Licensed Material beyond cost-recovery for physical media or third-party hosting.
+
+"Commercial Use" means any use that is not Non-Commercial Use. This includes, without limitation: operating the Licensed Material (modified or unmodified) as part of a hosted, managed, or API-accessible service; integrating the Licensed Material into a product sold or licensed to third parties; and using the Licensed Material to gain competitive commercial intelligence.
+
+"Contribution" means any code, documentation, configuration, data, or other material intentionally submitted to the Licensor for inclusion in the Licensed Material, whether submitted via pull request, patch, issue, email, or any other channel.
+
+"AI/ML Training Use" means using the Licensed Material, or any portion thereof, as training data, fine-tuning data, evaluation data, pre-training data, or reinforcement-learning signal for any machine-learning model, large language model, neural network, or other artificial intelligence system, whether conducted by a human or automated pipeline.
 
 1. Grant of Limited Rights
-Subject to your full compliance with this License, the Licensor grants you a personal, worldwide, revocable, non-exclusive, non-transferable, royalty-free license to:
- (a) Use and execute the Licensed Material in Source Form or compiled form strictly for Non-Commercial Use; and
- (b) Create temporary, incidental copies (e.g., in object code, build artifacts, caches) necessary for such Non-Commercial Use; and
- (c) Distribute Verbatim Copies for Non-Commercial Use, provided Section 4 (Attribution & Notice) is satisfied.
+Subject to your full and continuous compliance with this License, the Licensor grants you a personal, worldwide, revocable, non-exclusive, non-transferable, non-sublicensable, royalty-free license solely to:
+ (a) View, read, and execute the Licensed Material in Source Form or compiled form strictly for Non-Commercial Use; and
+ (b) Create temporary, transient copies (e.g., in RAM, object code, build artifacts, browser caches) strictly necessary for such Non-Commercial Use; and
+ (c) Distribute Verbatim Copies for Non-Commercial Use, provided all requirements of Section 4 (Attribution & Notice) are fully satisfied.
+
+No rights are granted by implication, estoppel, or otherwise. All rights not expressly granted are reserved by the Licensor.
 
 2. No Derivatives / Modification Restriction
-You may not modify, adapt, translate, reverse engineer (except to the extent required by applicable law), or create derivative works of the Licensed Material, except that you may make purely ephemeral modifications strictly necessary to (i) configure build parameters (e.g., editing a .env or config file), or (ii) apply security patches you authored for internal Non-Commercial Use. ANY distribution of a modified or derivative version is expressly prohibited.
+You may NOT modify, adapt, translate, disassemble, decompile, reverse engineer (except solely to the extent mandated by applicable law and only for interoperability purposes), summarize, distill, or create derivative works of the Licensed Material. You may make purely ephemeral, local modifications strictly necessary to (i) configure build parameters (e.g., editing a .env or config file) or (ii) apply security patches you authored for your own internal Non-Commercial Use, provided such modifications are never distributed. ANY distribution of a modified, patched, combined, transformed, or derivative version—partial or complete—is expressly prohibited. Using the Licensed Material as a structural, architectural, or conceptual basis for a separately written work is also prohibited.
 
-3. Prohibited Activities (Without a Separate Commercial / Derivative License)
-Without prior written permission from the Licensor you must NOT:
- (a) Engage in Commercial Use of the Licensed Material (modified or unmodified);
- (b) Offer, sell, rent, lease, sublicense, or otherwise commercialize the Licensed Material;
- (c) Provide the Licensed Material (modified or unmodified) as part of a service, SaaS, hosted, or managed offering;
- (d) Distribute modified, patched, combined, or derivative versions;
- (e) Remove, alter, or obscure copyright, license, trademark, or attribution notices;
- (f) Circumvent or remove any technical protection or usage limitations applied by the Licensor.
+3. Prohibited Activities (Without a Separate Written License)
+Without prior express written permission from the Licensor, you must NOT:
+ (a) Engage in any Commercial Use of the Licensed Material, modified or unmodified;
+ (b) Offer, sell, rent, lease, sublicense, transfer, assign, or otherwise commercialize the Licensed Material or any rights therein;
+ (c) Provide access to or use of the Licensed Material (modified or unmodified) as part of any service, API, SaaS, PaaS, IaaS, hosted offering, or managed service, regardless of whether a fee is charged;
+ (d) Distribute, publish, or transmit modified, patched, transformed, combined, adapted, or derivative versions of the Licensed Material;
+ (e) Remove, alter, disable, or obscure any copyright notice, license notice, patent notice, or attribution statement in or accompanying the Licensed Material;
+ (f) Circumvent, disable, or interfere with any technical protection measure, access control, or usage limitation applied by or on behalf of the Licensor;
+ (g) Use the Licensed Material, or any portion thereof, for AI/ML Training Use of any kind, including scraping, automated ingestion, dataset construction, or synthetic data generation derived from the Licensed Material;
+ (h) Use the Licensed Material as input to, or to generate output from, any generative AI model for the purpose of creating a competing product, service, or codebase;
+ (i) Mirror, archive, or re-host the Licensed Material on any platform not controlled by the Licensor for the purpose of redistribution, except as a Verbatim Copy for Non-Commercial Use permitted under Section 1(c).
 
 4. Attribution & Notice
-All Verbatim Copies you distribute must retain in all files (or in a top-level NOTICE file if present):
- - Original copyright notice(s);
- - This License text in full;
- - A notice substantially in the form: "This distribution contains the Monada Dominion project licensed for NON-COMMERCIAL, NO-DERIVATIVES use under the MD-NC-ND License v1.0. See LICENSE.";
- - A URL or repository reference to the canonical upstream source (if provided by Licensor).
+All Verbatim Copies you distribute must retain, unaltered, in every file (or in a top-level NOTICE file accompanying all files):
+ - All original copyright notice(s);
+ - This License text in full, including version number;
+ - A prominent notice reading: "This material is part of the Monada Dominion project and is licensed for NON-COMMERCIAL, NO-DERIVATIVES use only under the MD-NC-ND License v1.1. Commercial use, modification, and AI/ML training use are prohibited. See LICENSE.";
+ - A URL or repository reference to the canonical upstream source as provided by the Licensor;
+ - The Licensor's KVK registration number (87782324) if the notice is included in a standalone distribution.
 
 5. Patent Notice
-NO PATENT LICENSE IS GRANTED OR IMPLIED BY THIS LICENSE. If you initiate or threaten patent litigation (including cross-claim or counterclaim) alleging that the Licensed Material or a contribution thereto infringes any patent, your rights under this License terminate immediately.
+NO PATENT LICENSE IS GRANTED OR IMPLIED BY THIS LICENSE. Nothing in this License grants any right, express or implied, to use any patent claim of the Licensor or any contributor.
 
-6. Feedback
-You may (but are not required to) submit ideas, feedback, or suggestions ("Feedback"). By submitting Feedback you grant Licensor a perpetual, irrevocable, worldwide, transferable, sublicensable, royalty-free license to use, incorporate, and distribute the Feedback without obligation or attribution.
+6. Contributions & Intellectual Property Assignment
+By submitting a Contribution to the Licensor through any channel, you:
+ (a) Represent that you are the sole original author of the Contribution and have full right to make this assignment;
+ (b) Irrevocably assign to the Licensor all worldwide right, title, and interest in and to the Contribution, including all intellectual property rights therein, with full rights to sublicense;
+ (c) Grant the Licensor a perpetual, irrevocable, royalty-free, worldwide license to use, reproduce, modify, distribute, sublicense, and exploit the Contribution under any license terms the Licensor chooses;
+ (d) Waive any moral rights in the Contribution to the fullest extent permitted by applicable law;
+ (e) Acknowledge that you are not entitled to compensation, attribution, or any other consideration for the Contribution unless separately agreed in writing by the Licensor.
 
-7. Termination
-This License terminates automatically without notice if you breach any term. Upon termination you must cease all use and distribution, destroy local copies (excluding automatically generated backup archives retained unintentionally), and certify compliance upon request. Sections 4–13 survive termination.
+No Contribution is accepted under any other terms. If you are unable to make these representations, do not submit the Contribution.
 
-Licensor may, at its sole discretion, offer you a different (e.g., commercial or derivative) license under separate written terms.
+7. Feedback
+You may (but are not required to) submit ideas, observations, bug reports, or suggestions ("Feedback") that are not Contributions. By submitting Feedback you grant the Licensor a perpetual, irrevocable, worldwide, transferable, sublicensable, royalty-free license to use, reproduce, modify, incorporate, and distribute the Feedback under any terms, without obligation, attribution, or compensation to you.
 
-8. Disclaimer of Warranty
-THE LICENSED MATERIAL IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. YOUR USE IS AT YOUR SOLE RISK.
+8. Termination
+This License and all rights granted hereunder terminate automatically and immediately, without notice, upon any breach of any term. Upon termination you must:
+ (a) Immediately cease all access, use, copying, and distribution of the Licensed Material;
+ (b) Permanently destroy all local copies in your possession or control (excluding unintentional backup archives over which you have no reasonable control, which must be deleted upon discovery);
+ (c) Certify compliance with the foregoing in writing upon the Licensor's request within five (5) business days.
 
-9. Limitation of Liability
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL LICENSOR OR CONTRIBUTORS BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES; OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL, OR BUSINESS INTERRUPTION; OR FOR SUBSTITUTE GOODS OR SERVICES; ARISING OUT OF OR RELATED TO THIS LICENSE OR USE OF THE LICENSED MATERIAL, HOWEVER CAUSED AND UNDER ANY THEORY OF LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED ONE HUNDRED (100) USD OR THE AMOUNT (IF ANY) PAID TO LICENSOR FOR THE LICENSED MATERIAL DURING THE SIX (6) MONTHS PRIOR TO THE CLAIM.
+Termination does not limit any other legal remedy available to the Licensor. Sections 4–17 survive termination. The Licensor may, at sole discretion, offer reinstatement or a separate commercial license under separate written terms.
 
-10. Compliance with Law
-You are solely responsible for compliance with all applicable laws, regulations, and third-party rights in connection with your use of the Licensed Material.
+9. Disclaimer of Warranty
+THE LICENSED MATERIAL IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, ACCURACY, COMPLETENESS, AND NON-INFRINGEMENT. THE LICENSOR DOES NOT WARRANT THAT THE LICENSED MATERIAL WILL BE ERROR-FREE, SECURE, OR UNINTERRUPTED. YOUR USE IS ENTIRELY AT YOUR OWN RISK.
 
-11. Severability
-If any provision of this License is held unenforceable, that provision will be reformed only to the extent necessary to make it enforceable. The remaining provisions remain in full force and effect.
+10. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL THE LICENSOR, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES; OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL, BUSINESS OPPORTUNITY, OR BUSINESS INTERRUPTION; OR FOR THE COST OF SUBSTITUTE GOODS OR SERVICES; ARISING OUT OF OR RELATED TO THIS LICENSE, THE LICENSED MATERIAL, OR YOUR USE OR INABILITY TO USE THE LICENSED MATERIAL, HOWEVER CAUSED AND UNDER ANY THEORY OF LIABILITY (INCLUDING CONTRACT, TORT, STRICT LIABILITY, OR OTHERWISE), EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE LICENSOR'S TOTAL AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS ARISING OUT OF OR RELATED TO THIS LICENSE OR THE LICENSED MATERIAL SHALL NOT EXCEED ONE HUNDRED EUROS (EUR 100) OR THE AMOUNT (IF ANY) PAID BY YOU TO THE LICENSOR DURING THE SIX (6) MONTHS IMMEDIATELY PRECEDING THE CLAIM, WHICHEVER IS GREATER.
 
-12. No Waiver
-Failure of Licensor to enforce any right or provision shall not constitute a waiver of future enforcement of that right or provision.
+11. Indemnification
+You agree to indemnify, defend, and hold harmless the Licensor and its officers, directors, employees, agents, and successors from and against any claims, liabilities, damages, losses, costs, and expenses (including reasonable legal fees) arising out of or related to: (a) your use of the Licensed Material; (b) your breach of this License; or (c) any third-party claim that your use or distribution of the Licensed Material infringes any right of that third party.
 
-13. Governing Law (Optional)
-If the Licensor designates a jurisdiction in the copyright notice (e.g., "Governing Law: State / Country"), this License will be governed by the laws of that jurisdiction excluding its conflict-of-law principles. Otherwise, governing law is determined by applicable conflict-of-law rules.
+12. Compliance with Law
+You are solely responsible for compliance with all applicable laws, regulations, export controls, and third-party rights in connection with your use of the Licensed Material, including but not limited to data protection laws (including the GDPR where applicable) and intellectual property laws.
 
-14. Entire Agreement
-This License constitutes the entire agreement between you and the Licensor concerning the Licensed Material and supersedes all prior or contemporaneous understandings regarding its subject matter.
+13. Severability
+If any provision of this License is held invalid, illegal, or unenforceable by a court of competent jurisdiction, that provision will be limited or modified to the minimum extent necessary to make it enforceable. The remaining provisions remain in full force and effect.
 
-15. Versioning
-The Licensor may publish new versions of this License with a unique version number. Unless explicitly stated otherwise, you may continue to use the Licensed Material under the version originally applied.
+14. No Waiver
+Failure by the Licensor to enforce any right or provision of this License at any time shall not constitute a waiver of that right or provision, nor shall it preclude future enforcement.
 
-16. Contact for Commercial / Derivative Licensing
-To request commercial, derivative, or broader usage rights, contact: [make an issue]. Granting such rights is at Licensor's sole discretion.
+15. Governing Law & Dispute Resolution
+This License is governed by and construed in accordance with the laws of the Netherlands, excluding its conflict-of-law principles. The United Nations Convention on Contracts for the International Sale of Goods does not apply. Any dispute arising out of or relating to this License or the Licensed Material shall be submitted exclusively to the competent courts of the District of Oost-Brabant, Netherlands, and you irrevocably consent to personal jurisdiction in those courts. Nothing herein limits the Licensor's right to seek injunctive or other equitable relief in any court of competent jurisdiction.
 
-Copyright (c) 2025 Monada Dominion and/or individual contributors as noted.
+16. Entire Agreement
+This License constitutes the entire agreement between you and the Licensor concerning the Licensed Material and supersedes all prior or contemporaneous understandings, representations, or agreements, whether oral or written, regarding its subject matter. No modification of this License is binding unless made in writing and signed by an authorized representative of the Licensor.
+
+17. Versioning
+The Licensor may publish revised versions of this License with a unique version number. Unless the Licensor expressly states otherwise, you may continue to use the Licensed Material under the version originally applied to it. New versions will be posted to the canonical repository.
+
+18. Contact for Commercial, Derivative, or AI/ML Licensing
+To request commercial, derivative, AI/ML training, or any other broader usage rights, contact the Licensor:
+
+ Artur Kraskov — Monada Dominion
+ monadadominion@proton.me
+ KVK: 87782324 (Eindhoven, Netherlands)
+ GitHub: https://github.com/monadadominion (open an issue in the relevant repository)
+
+Granting such rights is solely at the Licensor's discretion. Unauthorized use prior to obtaining a license constitutes infringement and may result in legal action including claims for damages and injunctive relief.
+
+─────────────────────────────────────────────────────────────────────────────
+Copyright (c) 2025–2026 Artur Kraskov / Monada Dominion (KVK 87782324).
 All rights reserved except as expressly granted herein.
+─────────────────────────────────────────────────────────────────────────────
 
-All publications are also licensed under CC BY-NC 4.0
-https://creativecommons.org/licenses/by-nc/4.0/
-
+DOCUMENTATION & WRITTEN PUBLICATIONS NOTICE:
+All written publications, articles, reports, books, texts and documentation files in this
+repository (distinct from source code and build artifacts) are additionally
+licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+International (CC BY-NC-ND 4.0):
+https://creativecommons.org/licenses/by-nc-nd/4.0/
+Where any conflict exists between CC BY-NC-ND 4.0 and this License, this
+License controls.
 
 END OF LICENSE
