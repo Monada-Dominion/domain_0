@@ -61,6 +61,35 @@ FALLBACK_PUBLICATIONS = [
 # Manual mapping has been removed. The script now relies solely on fuzzy matching
 # between ResearchGate publication titles and repository file names.
 MANUAL_MAPPING = {}
+from PyPDF2 import PdfReader
+
+
+def extract_pdf_title(pdf_path):
+    """Extract a title from a PDF file.
+    First tries the PDF metadata 'title'. If not present, reads the first page
+    and returns the first non‑empty line of text. Returns None on failure.
+    """
+    try:
+        reader = PdfReader(pdf_path)
+        # Metadata title
+        meta_title = getattr(reader.metadata, 'title', None)
+        if meta_title:
+            return meta_title.strip()
+        # Fallback: first page text
+        if reader.pages:
+            first_page = reader.pages[0]
+            text = first_page.extract_text()
+            if text:
+                for line in text.splitlines():
+                    line = line.strip()
+                    if line:
+                        return line
+    except Exception as e:
+        # Silently ignore PDF parsing errors
+        return None
+    return None
+
+
 def normalize_text(text):
     """Normalize text for fuzzy matching (lowercase, alphanumeric only)."""
     return set(re.sub(r'[^a-z0-9]', ' ', text.lower()).split())
@@ -112,11 +141,16 @@ def scan_git_files():
             else:
                 size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
                 
+            if ext == '.pdf':
+                pdf_title = extract_pdf_title(full_path)
+            else:
+                pdf_title = None
             files_info.append({
                 "name": file,
                 "rel_path": rel_path,
                 "size": size_str,
-                "type": "PDF Document" if file.endswith(".pdf") else "File"
+                "type": "PDF Document" if file.endswith(".pdf") else "File",
+                "pdf_title": pdf_title,
             })
             
     # Scan other_publications
@@ -217,102 +251,105 @@ def generate_report():
         print(f"Using default database with {len(rg_pubs)} publications.")
     else:
         print(f"Extracted {len(rg_pubs)} publications from {source}.")
-
-    # 3. Match ResearchGate Publications with Git Files
-    matched_git_paths = set()
-    rg_table_rows = []
-    
-    for pub in rg_pubs:
-        pub_id = pub["id"]
-        title = pub["title"]
-        url = pub["url"]
-        pub_type = pub.get("type", "Publication")
-        pub_date = pub.get("date", "N/A")
         
-        # Check manual mapping first
-        matched_files = []
-        for mapped_id, file_paths in MANUAL_MAPPING.items():
-            # Match ID prefix or full match
-            if mapped_id in pub_id or pub_id in mapped_id:
-                for fp in file_paths:
-                    # check if file exists
-                    full_fp = os.path.join(DOMAIN_0_DIR, fp)
-                    if os.path.exists(full_fp):
-                        matched_files.append(fp)
-                        matched_git_paths.add(fp)
-                        
-        # If no manual mapping, try fuzzy matching
-        if not matched_files:
+        # 3. Match ResearchGate Publications with Git Files
+        matched_git_paths = set()
+        rg_table_rows = []
+        
+        for pub in rg_pubs:
+            pub_id = pub["id"]
+            title = pub["title"]
+            url = pub["url"]
+            pub_type = pub.get("type", "Publication")
+            pub_date = pub.get("date", "N/A")
+            
+            matched_files = []
+            # First, try fuzzy match against PDF extracted titles if available
             for gf in git_files:
+                # Prefer PDF title if present
+                if gf.get("pdf_title"):
+                    if is_fuzzy_match(title, gf["pdf_title"]):
+                        matched_files.append(gf["rel_path"])
+                        matched_git_paths.add(gf["rel_path"])
+                        continue
+                # Fallback to filename matching
                 if is_fuzzy_match(title, gf["name"]):
                     matched_files.append(gf["rel_path"])
                     matched_git_paths.add(gf["rel_path"])
-                    
-        # Construct row
-        status = "✅ Backed Up" if matched_files else "❌ Missing"
-        if matched_files:
-            links = []
-            for mf in matched_files:
-                # Link format in markdown: [basename](file)
-                base = os.path.basename(mf)
-                links.append(f"[`{base}`](../{mf})")
-            git_col = "<br>".join(links)
-        else:
-            git_col = "—"
             
-        rg_table_rows.append(f"| [{title}]({url}) | {pub_type} | {pub_date} | {status} | {git_col} |")
-        
-    # 4. Find Git files that are NOT matched to any ResearchGate publication
-    unmatched_git_files = []
-    for gf in git_files:
-        if gf["rel_path"] not in matched_git_paths:
-            unmatched_git_files.append(gf)
+            status = "✅ Backed Up" if matched_files else "❌ Missing"
+            if matched_files:
+                links = []
+                for mf in matched_files:
+                    base = os.path.basename(mf)
+                    # Show PDF file name with link to repo
+                    links.append(f"[`{base}`](../{mf})")
+                git_col = "<br>".join(links)
+            else:
+                git_col = "—"
             
-    # 5. Build README content
-    new_readme = []
-    new_readme.append("# Domain 0: Research Gate Backup & Publications")
-    new_readme.append("")
-    new_readme.append("This directory serves as the primary repository for backing up and tracking research publications.")
-    new_readme.append("")
-    new_readme.append("## Authors")
-    new_readme.append("")
-    new_readme.append("- **Artur Kraskov** ([ResearchGate Profile](https://www.researchgate.net/profile/Artur-Kraskov))")
-    new_readme.append("- **Shallwin Silvania** ([ResearchGate Profile](https://www.researchgate.net/profile/Shallwin-Silvania))")
-    new_readme.append("")
-    new_readme.append("---")
-    new_readme.append("")
-    new_readme.append("## ResearchGate Publications Backup Tracker")
-    new_readme.append("")
-    new_readme.append(f"*Last verified: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} (Source: {source})*")
-    new_readme.append("")
-    new_readme.append("| Publication Title | Type | Date | Backup Status | Git Files |")
-    new_readme.append("| :--- | :--- | :--- | :--- | :--- |")
-    new_readme.extend(rg_table_rows)
-    new_readme.append("")
-    
-    if unmatched_git_files:
-        new_readme.append("## Other Git Publications (Not Linked to ResearchGate)")
+            # Build row with PDF title if available (first matched file)
+            pdf_title_display = "—"
+            if matched_files:
+                # Find the first matched file info to get pdf_title
+                first_path = matched_files[0]
+                for gf in git_files:
+                    if gf["rel_path"] == first_path:
+                        pdf_title_display = gf.get("pdf_title") or "—"
+                        break
+            rg_table_rows.append(f"| {title} | {pub_type} | {pub_date} | {pdf_title_display} | [{title}]({url}) | {status} | {git_col} |")
+            
+        # 4. Find Git files that are NOT matched to any ResearchGate publication
+        unmatched_git_files = []
+        for gf in git_files:
+            if gf["rel_path"] not in matched_git_paths:
+                unmatched_git_files.append(gf)
+                
+        # 5. Build README content
+        new_readme = []
+        new_readme.append("# Domain 0: Research Gate Backup & Publications")
         new_readme.append("")
-        new_readme.append("| File Name | Path | Size | Type |")
-        new_readme.append("| :--- | :--- | :--- | :--- |")
-        for ugf in unmatched_git_files:
-            new_readme.append(f"| `{ugf['name']}` | [`{ugf['rel_path']}`](../{ugf['rel_path']}) | {ugf['size']} | {ugf['type']} |")
+        new_readme.append("This directory serves as the primary repository for backing up and tracking research publications.")
+        new_readme.append("")
+        new_readme.append("## Authors")
+        new_readme.append("")
+        new_readme.append("- **Artur Kraskov** ([ResearchGate Profile](https://www.researchgate.net/profile/Artur-Kraskov))")
+        new_readme.append("- **Shallwin Silvania** ([ResearchGate Profile](https://www.researchgate.net/profile/Shallwin-Silvania))")
+        new_readme.append("")
+        new_readme.append("---")
+        new_readme.append("")
+        new_readme.append("## ResearchGate Publications Backup Tracker")
+        new_readme.append("")
+        new_readme.append(f"*Last verified: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} (Source: {source})*")
+        new_readme.append("")
+        new_readme.append("| Publication Title | Type | Date | PDF Title | RG Link | Backup Status | Git Files |")
+        new_readme.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+        new_readme.extend(rg_table_rows)
         new_readme.append("")
         
-    new_readme.append("---")
-    new_readme.append("## How to update")
-    new_readme.append("1. Log into your ResearchGate profile and save the page as an HTML file named `rg_profile.html` in this folder.")
-    new_readme.append("2. Run the update script to refresh this table:")
-    new_readme.append("   ```bash")
-    new_readme.append("   python3 researchGate_backup/check_backups.py")
-    new_readme.append("   ```")
-    new_readme.append("3. Commit and push the changes.")
-    
-    # Write to README.md
-    with open(README_PATH, "w", encoding="utf-8") as f:
-        f.write("\n".join(new_readme) + "\n")
+        if unmatched_git_files:
+            new_readme.append("## Other Git Publications (Not Linked to ResearchGate)")
+            new_readme.append("")
+            new_readme.append("| File Name | Path | Size | Type |")
+            new_readme.append("| :--- | :--- | :--- | :--- |")
+            for ugf in unmatched_git_files:
+                new_readme.append(f"| `{ugf['name']}` | [`{ugf['rel_path']}`](../{ugf['rel_path']}) | {ugf['size']} | {ugf['type']} |")
+            new_readme.append("")
+            
+        new_readme.append("---")
+        new_readme.append("## How to update")
+        new_readme.append("1. Log into your ResearchGate profile and save the page as an HTML file named `rg_profile.html` in this folder.")
+        new_readme.append("2. Run the update script to refresh this table:")
+        new_readme.append("   ```bash")
+        new_readme.append("   python3 researchGate_backup/check_backups.py")
+        new_readme.append("   ```")
+        new_readme.append("3. Commit and push the changes.")
         
-    print(f"README.md updated successfully at: {README_PATH}")
+        # Write to README.md
+        with open(README_PATH, "w", encoding="utf-8") as f:
+            f.write("\n".join(new_readme) + "\n")
+        
+        print(f"README.md updated successfully at: {README_PATH}")
 
 if __name__ == "__main__":
     generate_report()
