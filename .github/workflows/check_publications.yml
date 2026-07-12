@@ -33,5 +33,5 @@ jobs:
             echo "No changes in publication backups."
           else
             git commit -m "docs: auto-update publications backup status table [skip ci]"
-            git push
+            git push || echo "Push failed, but continuing"
           fi
