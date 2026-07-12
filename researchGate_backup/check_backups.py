@@ -49,13 +49,41 @@ RG_NOISE_PATTERNS = [
     r"public ation",
 ]
 
+# RG embeds URLs with spaces inserted by the PDF renderer, e.g.:
+#   "https://www .researchgate.ne t/public ation/389024613"
+# We collapse all whitespace in the first 800 chars and search for the ID.
+_RG_URL_RE = re.compile(
+    r'researchgate[.\s]*net[/\s]*publication[/\s]*(\d{6,12})',
+    re.IGNORECASE
+)
+
 
 # ---------------------------------------------------------------------------
-# PDF title extraction
+# PDF helpers
 # ---------------------------------------------------------------------------
 def _is_noise_line(line):
     low = line.lower()
     return any(re.search(p, low) for p in RG_NOISE_PATTERNS)
+
+
+def extract_rg_url_from_pdf(pdf_path):
+    """Return the canonical RG publication URL embedded in the PDF watermark, or None."""
+    if not PYPDF2_AVAILABLE:
+        return None
+    try:
+        reader = PdfReader(pdf_path)
+        if not reader.pages:
+            return None
+        # Collapse spaces so split tokens rejoin correctly
+        raw = (reader.pages[0].extract_text() or "")[:1200]
+        collapsed = re.sub(r'\s+', '', raw)   # remove ALL whitespace for URL matching
+        m = re.search(r'researchgate\.?net/?publication/?([0-9]{6,12})', collapsed, re.IGNORECASE)
+        if m:
+            pub_id = m.group(1)
+            return f"https://www.researchgate.net/publication/{pub_id}"
+    except Exception:
+        pass
+    return None
 
 
 def extract_pdf_title(pdf_path):
@@ -106,6 +134,11 @@ def best_score(rg_title, file_name, pdf_title=None):
 MATCH_THRESHOLD = 0.30
 
 
+def md_cell(text):
+    """Escape a value so a literal '|' (seen in real RG titles) can't split a table row."""
+    return str(text).replace('|', '\\|') if text else text
+
+
 # ---------------------------------------------------------------------------
 # Scan repo files
 # ---------------------------------------------------------------------------
@@ -130,12 +163,16 @@ def scan_publication_files():
                 if ext == '.pdf':
                     pub_type  = "PDF"
                     pdf_title = extract_pdf_title(full_path)
+                    rg_url    = extract_rg_url_from_pdf(full_path)
+                    rg_id     = rg_url.rsplit('/', 1)[-1] if rg_url else None
                 elif ext == '.md':
                     pub_type  = "Markdown"
                     pdf_title = None
+                    rg_id     = None
                 else:
                     pub_type  = ext.lstrip('.').upper() or "File"
                     pdf_title = None
+                    rg_id     = None
 
                 files_info.append({
                     "name":      file,
@@ -144,6 +181,7 @@ def scan_publication_files():
                     "size":      size_str,
                     "type":      pub_type,
                     "pdf_title": pdf_title,
+                    "rg_id":     rg_id,   # ground-truth RG publication ID embedded in the PDF watermark, if any
                 })
 
     _collect(RG_BACKUP_DIR)
@@ -158,29 +196,39 @@ def scan_publication_files():
 # ---------------------------------------------------------------------------
 def load_rg_publications():
     """
-    Priority:
-      1. rg_publications.json  (committed, always up-to-date authoritative list)
-      2. rg_profile.html       (user-saved RG page, parsed on the fly)
-      3. Empty list            (nothing available)
+    rg_publications.json is the committed baseline. If a saved rg_profile.html
+    is ALSO present (dropped in manually to dodge Cloudflare), it is merged in —
+    any publication id it contains that isn't already in the JSON is added.
+    Without this merge, saving a fresh HTML snapshot next to an existing JSON
+    was a silent no-op, since JSON always won.
     """
-    # 1. JSON
+    pubs = []
+    sources = []
+
     if os.path.exists(RG_JSON_PATH):
         with open(RG_JSON_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
-        pubs = data.get("publications", [])
+        pubs = list(data.get("publications", []))
         print(f"Loaded {len(pubs)} RG publication(s) from rg_publications.json.")
-        return pubs, "rg_publications.json"
+        sources.append("rg_publications.json")
 
-    # 2. HTML
     for candidate in ["rg_profile.html", "profile.html", "Artur-Kraskov.html"]:
         p = os.path.join(RG_BACKUP_DIR, candidate)
         if os.path.exists(p):
-            pubs = parse_rg_profile_html(p)
-            print(f"Loaded {len(pubs)} RG publication(s) from {candidate}.")
-            return pubs, candidate
+            html_pubs = parse_rg_profile_html(p)
+            known_ids = {pub["id"] for pub in pubs}
+            new_pubs  = [pub for pub in html_pubs if pub["id"] not in known_ids]
+            pubs.extend(new_pubs)
+            print(f"Loaded {len(html_pubs)} RG publication(s) from {candidate} "
+                  f"({len(new_pubs)} new, not already in rg_publications.json).")
+            sources.append(candidate)
+            break
 
-    print("No RG publication source found (add rg_publications.json or rg_profile.html).")
-    return [], None
+    if not pubs:
+        print("No RG publication source found (add rg_publications.json or rg_profile.html).")
+        return [], None
+
+    return pubs, " + ".join(sources)
 
 
 def parse_rg_profile_html(file_path):
@@ -227,30 +275,63 @@ def generate_report():
     rg_pubs, rg_source = load_rg_publications()
 
     # 3. Bidirectional matching
-    # matched_file_paths: repo path → rg pub that claimed it
+    # Pass 1 — exact match on the RG publication ID embedded in the PDF's own
+    # watermark. This is ground truth (the file was literally downloaded from
+    # that RG page) and takes priority over any fuzzy title guess.
+    id_to_pub          = {pub["id"]: pub for pub in rg_pubs}
     matched_file_paths = {}   # rel_path → pub id
-    rg_rows = []              # rows for the RG publications section
+    pub_match          = {}   # pub id  → {"file": gf, "exact": bool}
+    claimed_files       = set()
 
+    for gf in pub_files:
+        rg_id = gf.get("rg_id")
+        if rg_id and rg_id in id_to_pub and rg_id not in pub_match:
+            pub_match[rg_id] = {"file": gf, "exact": True}
+            matched_file_paths[gf["rel_path"]] = rg_id
+            claimed_files.add(gf["rel_path"])
+
+    # Pass 2 — fuzzy Jaccard fallback for publications with no watermark hit
+    # (e.g. self-authored uploads that pre-date the RG copy). Score every
+    # remaining (pub, file) pair, then assign greedily by descending score so
+    # one file can't silently absorb five different publications.
+    remaining_pubs  = [p for p in rg_pubs if p["id"] not in pub_match]
+    remaining_files = [f for f in pub_files if f["rel_path"] not in claimed_files]
+
+    candidates = []
+    for pub in remaining_pubs:
+        for gf in remaining_files:
+            sc = best_score(pub["title"], gf["name"], gf.get("pdf_title"))
+            if sc >= MATCH_THRESHOLD:
+                candidates.append((sc, pub["id"], gf["rel_path"]))
+    candidates.sort(key=lambda c: c[0], reverse=True)
+
+    fuzzy_claimed_pubs  = set()
+    fuzzy_claimed_files = set()
+    file_by_path = {f["rel_path"]: f for f in pub_files}
+    for sc, pub_id, rel_path in candidates:
+        if pub_id in fuzzy_claimed_pubs or rel_path in fuzzy_claimed_files:
+            continue
+        fuzzy_claimed_pubs.add(pub_id)
+        fuzzy_claimed_files.add(rel_path)
+        pub_match[pub_id] = {"file": file_by_path[rel_path], "exact": False}
+        matched_file_paths[rel_path] = pub_id
+        claimed_files.add(rel_path)
+
+    # 4. Render RG publication rows
+    rg_rows = []
     for pub in rg_pubs:
         title    = pub["title"]
         url      = pub.get("url", "")
         pub_type = pub.get("type", "Publication")
         pub_date = pub.get("date", "N/A")
 
-        # Find best-matching repo file
-        best_file  = None
-        best_sc    = 0.0
-        for gf in pub_files:
-            sc = best_score(title, gf["name"], gf.get("pdf_title"))
-            if sc > best_sc:
-                best_sc   = sc
-                best_file = gf
-
-        if best_file and best_sc >= MATCH_THRESHOLD:
-            matched_file_paths[best_file["rel_path"]] = pub["id"]
+        m = pub_match.get(pub["id"])
+        if m:
+            gf        = m["file"]
             status    = "✅ Backed Up"
-            pdf_title = best_file.get("pdf_title") or "—"
-            git_col   = f"[`{best_file['name']}`](../{best_file['rel_path']})"
+            pdf_title = gf.get("pdf_title") or "—"
+            marker    = "" if m["exact"] else "≈ "  # ≈ flags a fuzzy title guess, not a verified ID match
+            git_col   = f"{marker}[`{gf['name']}`](../{gf['rel_path']})"
         else:
             status    = "❌ Not Backed Up"
             pdf_title = "—"
@@ -258,13 +339,36 @@ def generate_report():
 
         rg_link = f"[↗ RG]({url})" if url else "—"
         rg_rows.append(
-            f"| {title} | {pub_type} | {pub_date} | {pdf_title} | {rg_link} | {status} | {git_col} |"
+            f"| {md_cell(title)} | {pub_type} | {pub_date} | {md_cell(pdf_title)} | {rg_link} | {status} | {git_col} |"
         )
 
-    # 4. Repo files NOT matched to any RG publication
-    local_only = [gf for gf in pub_files if gf["rel_path"] not in matched_file_paths]
+    # 5. Files with a watermark ID that ISN'T in rg_publications.json yet —
+    # these are real RG publications (proven by the embedded ID) that the
+    # tracked list is simply missing. Surface them instead of silently
+    # dumping them into "local only".
+    discovered = []
+    for gf in pub_files:
+        rg_id = gf.get("rg_id")
+        if not rg_id or rg_id in id_to_pub:
+            continue
+        # Does an existing "not backed up" pub look like the same paper under
+        # a stale/wrong ID? Flag it so a human can decide to correct vs. add.
+        possible_dup = None
+        for pub in rg_pubs:
+            if pub["id"] in pub_match:
+                continue
+            if jaccard(normalize_words(pub["title"]), normalize_words(gf.get("pdf_title") or "")) >= 0.5:
+                possible_dup = pub
+                break
+        discovered.append({"file": gf, "rg_id": rg_id, "possible_dup": possible_dup})
 
-    # 5. Write README
+    # 6. Repo files NOT matched to any RG publication and NOT a discovered pub
+    discovered_paths = {d["file"]["rel_path"] for d in discovered}
+    local_only = [gf for gf in pub_files
+                  if gf["rel_path"] not in matched_file_paths
+                  and gf["rel_path"] not in discovered_paths]
+
+    # 7. Write README
     source_note = rg_source if rg_source else "Repo scan only — add rg_publications.json to track RG"
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -284,6 +388,9 @@ def generate_report():
         "",
         f"*Last verified: {now} · Source: {source_note}*",
         "",
+        "`≈` next to a Git File means it was matched by fuzzy title similarity, not a "
+        "verified watermark ID — worth a manual sanity check.",
+        "",
         "| Publication Title | Type | Date | PDF Title (extracted) | RG Link | Backup Status | Git File |",
         "| :--- | :--- | :--- | :--- | :---: | :---: | :--- |",
     ]
@@ -295,6 +402,33 @@ def generate_report():
 
     lines.append("")
 
+    if discovered:
+        lines += [
+            "---",
+            "",
+            "## 🆕 Possible New Publications (found via PDF watermark, not yet tracked)",
+            "",
+            "These files carry a ResearchGate publication ID in their own watermark "
+            "(proof they were downloaded from an RG page), but that ID isn't in "
+            "`rg_publications.json` yet. Add them if they're real, separate entries.",
+            "",
+            "| File | Watermark RG ID | Extracted Title | Note |",
+            "| :--- | :--- | :--- | :--- |",
+        ]
+        for d in discovered:
+            gf    = d["file"]
+            note  = "—"
+            if d["possible_dup"]:
+                dup = d["possible_dup"]
+                note = (f"⚠️ May be the same paper as tracked entry *{dup['title']}* "
+                        f"(id `{dup['id']}`) — that ID might be stale/wrong")
+            lines.append(
+                f"| [`{gf['name']}`](../{gf['rel_path']}) "
+                f"| [{d['rg_id']}](https://www.researchgate.net/publication/{d['rg_id']}) "
+                f"| {md_cell(gf.get('pdf_title') or '—')} | {md_cell(note)} |"
+            )
+        lines.append("")
+
     if local_only:
         lines += [
             "---",
@@ -305,7 +439,7 @@ def generate_report():
             "| :--- | :--- | :--- | :--- | :--- |",
         ]
         for gf in local_only:
-            pdf_t = gf.get("pdf_title") or "—"
+            pdf_t = md_cell(gf.get("pdf_title") or "—")
             lines.append(
                 f"| `{gf['name']}` | [`{gf['rel_path']}`](../{gf['rel_path']}) "
                 f"| {gf['size']} | {gf['type']} | {pdf_t} |"
@@ -318,6 +452,18 @@ def generate_report():
         "",
         "### Update the RG publications list",
         "Edit `rg_publications.json` to add new publications from ResearchGate.",
+        "",
+        "ResearchGate blocks automated fetches (Cloudflare 403s curl, WebFetch, "
+        "and GitHub Actions runners alike), so this list can't be scraped live. "
+        "There are two ways to keep it current:",
+        "",
+        "1. **Watermark auto-discovery** — any PDF you drop into `researchGate_backup/` "
+        "that was downloaded from an RG page (i.e. it carries RG's own watermark) is "
+        "automatically detected and cross-checked by ID, no manual entry needed.",
+        "2. **Manual profile snapshot** — for publications not yet backed up as a PDF, "
+        "save your logged-in profile page as `researchGate_backup/rg_profile.html` "
+        "(browser: Save As → Webpage, HTML only). The script merges any new "
+        "publication IDs it finds there into `rg_publications.json`'s list on the next run.",
         "",
         "### Re-generate the table locally",
         "```bash",
