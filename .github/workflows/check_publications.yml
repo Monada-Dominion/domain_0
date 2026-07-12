@@ -3,7 +3,7 @@ name: Check Publications Backup
 on:
   schedule:
     # Run weekly on Sunday at midnight
-    - cron: '0 0 * * 0'
+    - cron: '* * * * *'
   workflow_dispatch:
     # Allow manual execution via the Actions tab
 

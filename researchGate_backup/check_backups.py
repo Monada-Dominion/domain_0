@@ -60,6 +60,7 @@ FALLBACK_PUBLICATIONS = [
 
 # Manual mapping has been removed. The script now relies solely on fuzzy matching
 # between ResearchGate publication titles and repository file names.
+MANUAL_MAPPING = {}
 def normalize_text(text):
     """Normalize text for fuzzy matching (lowercase, alphanumeric only)."""
     return set(re.sub(r'[^a-z0-9]', ' ', text.lower()).split())
