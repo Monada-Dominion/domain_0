@@ -326,6 +326,7 @@ def generate_report():
         pub_date = pub.get("date", "N/A")
 
         m = pub_match.get(pub["id"])
+        id_verified = bool(m and m["exact"])  # ID confirmed by the file's own RG watermark, not just typed into the JSON
         if m:
             gf        = m["file"]
             status    = "✅ Backed Up"
@@ -337,7 +338,14 @@ def generate_report():
             pdf_title = "—"
             git_col   = "—"
 
-        rg_link = f"[↗ RG]({url})" if url else "—"
+        if not url:
+            rg_link = "—"
+        elif id_verified:
+            rg_link = f"[↗ RG]({url})"
+        else:
+            # This ID has no corroborating evidence (no PDF watermark confirms it) —
+            # entries in this state have turned out to point at the wrong paper before.
+            rg_link = f"⚠️ [↗ RG]({url}) *(unverified ID)*"
         rg_rows.append(
             f"| {md_cell(title)} | {pub_type} | {pub_date} | {md_cell(pdf_title)} | {rg_link} | {status} | {git_col} |"
         )
@@ -389,7 +397,10 @@ def generate_report():
         f"*Last verified: {now} · Source: {source_note}*",
         "",
         "`≈` next to a Git File means it was matched by fuzzy title similarity, not a "
-        "verified watermark ID — worth a manual sanity check.",
+        "verified watermark ID. `⚠️ (unverified ID)` on an RG Link means no local PDF's "
+        "watermark confirms that ID — these have turned out to point at the wrong paper "
+        "before, so treat the number as a placeholder until you confirm it on your "
+        "actual profile.",
         "",
         "| Publication Title | Type | Date | PDF Title (extracted) | RG Link | Backup Status | Git File |",
         "| :--- | :--- | :--- | :--- | :---: | :---: | :--- |",

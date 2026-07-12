@@ -11,16 +11,16 @@ This directory serves as the primary repository for backing up and tracking rese
 
 ## ResearchGate Publications Backup Status
 
-*Last verified: 2026-07-12 18:00:58 · Source: rg_publications.json*
+*Last verified: 2026-07-12 18:09:36 · Source: rg_publications.json*
 
-`≈` next to a Git File means it was matched by fuzzy title similarity, not a verified watermark ID — worth a manual sanity check.
+`≈` next to a Git File means it was matched by fuzzy title similarity, not a verified watermark ID. `⚠️ (unverified ID)` on an RG Link means no local PDF's watermark confirms that ID — these have turned out to point at the wrong paper before, so treat the number as a placeholder until you confirm it on your actual profile.
 
 | Publication Title | Type | Date | PDF Title (extracted) | RG Link | Backup Status | Git File |
 | :--- | :--- | :--- | :--- | :---: | :---: | :--- |
-| The Universal Matrix: From Visual Heuristic to Algorithmic Construction | Preprint | 2026 | — | [↗ RG](https://www.researchgate.net/publication/397191799_The_Universal_Matrix_From_Visual_Heuristic_to_Algorithmic_Construction) | ❌ Not Backed Up | — |
-| Universal Matrix RL with Requisite Variety: Architecture and Behaviour | Working Paper | 2025 | Universal Matrix RL with Requisite Variety: Architecture and | [↗ RG](https://www.researchgate.net/publication/395696803_Universal_Matrix_RL_with_Requisite_Variety_Architecture_and_Behaviour) | ✅ Backed Up | ≈ [`um_ai_with_rand_and_input-2.pdf`](../researchGate_backup/um_ai_with_rand_and_input-2.pdf) |
+| The Universal Matrix: From Visual Heuristic to Algorithmic Construction | Preprint | 2026 | — | ⚠️ [↗ RG](https://www.researchgate.net/publication/397191799_The_Universal_Matrix_From_Visual_Heuristic_to_Algorithmic_Construction) *(unverified ID)* | ❌ Not Backed Up | — |
+| Universal Matrix RL with Requisite Variety: Architecture and Behaviour | Working Paper | 2025 | Universal Matrix RL with Requisite Variety: Architecture and | ⚠️ [↗ RG](https://www.researchgate.net/publication/395696803_Universal_Matrix_RL_with_Requisite_Variety_Architecture_and_Behaviour) *(unverified ID)* | ✅ Backed Up | ≈ [`um_ai_with_rand_and_input-2.pdf`](../researchGate_backup/um_ai_with_rand_and_input-2.pdf) |
 | Updated Occam's Razor for the Universal Matrix | Preprint | 2025 | Universal Matrix: A Least-Action Cartesian Construction Protocol Embodying | [↗ RG](https://www.researchgate.net/publication/394401785) | ✅ Backed Up | [`updated_occams_razor_um-2-2.pdf`](../researchGate_backup/updated_occams_razor_um-2-2.pdf) |
-| Universal Matrix: Least-Action Cartesian Construction Protocol | Preprint | 2025 | — | [↗ RG](https://www.researchgate.net/publication/392942469_Universal_Matrix_Least-Action_Cartesian_Construction_Protocol_Permitted_Tools_and_Primitive_Moves) | ❌ Not Backed Up | — |
+| Universal Matrix: Least-Action Cartesian Construction Protocol | Preprint | 2025 | — | ⚠️ [↗ RG](https://www.researchgate.net/publication/392942469_Universal_Matrix_Least-Action_Cartesian_Construction_Protocol_Permitted_Tools_and_Primitive_Moves) *(unverified ID)* | ❌ Not Backed Up | — |
 | Least-Action Cartesian Construction Protocol of the Universal Matrix | Preprint | 2025 | Universal Matrix: Least-Action Cartesian Construction Protocol Permitted | [↗ RG](https://www.researchgate.net/publication/392231942) | ✅ Backed Up | [`Least_Action_Cartesian_Construction_Protocol_of_the_Universal_Matrix-2.pdf`](../researchGate_backup/Least_Action_Cartesian_Construction_Protocol_of_the_Universal_Matrix-2.pdf) |
 | Formal Notation for the Universal Matrix | Technical Report | 2025 | Constructive Geometric Sequence Notation for the Universal Matrix | [↗ RG](https://www.researchgate.net/publication/391399244) | ✅ Backed Up | [`Formal_notation_for_the_universal_matrix.pdf`](../researchGate_backup/Formal_notation_for_the_universal_matrix.pdf) |
 | Universal Matrix Co-Research | Working Paper | 2025 | Open Call: Collaborative Exploration of the Universal Matrix | [↗ RG](https://www.researchgate.net/publication/390582693) | ✅ Backed Up | [`um__co_research.pdf`](../researchGate_backup/um__co_research.pdf) |
