@@ -1,0 +1,120 @@
+{
+  "_comment": "Authoritative list of ResearchGate publications. Edit this file to add/remove entries. The check_backups.py script uses this to find RG papers NOT yet backed up in the repo.",
+  "authors": [
+    {
+      "name": "Artur Kraskov",
+      "profile_url": "https://www.researchgate.net/profile/Artur-Kraskov"
+    },
+    {
+      "name": "Shallwin Silvania",
+      "profile_url": "https://www.researchgate.net/profile/Shallwin-Silvania"
+    }
+  ],
+  "publications": [
+    {
+      "id": "397191799",
+      "title": "The Universal Matrix: From Visual Heuristic to Algorithmic Construction",
+      "url": "https://www.researchgate.net/publication/397191799_The_Universal_Matrix_From_Visual_Heuristic_to_Algorithmic_Construction",
+      "type": "Preprint",
+      "date": "2026"
+    },
+    {
+      "id": "395696803",
+      "title": "Universal Matrix RL with Requisite Variety: Architecture and Behaviour",
+      "url": "https://www.researchgate.net/publication/395696803_Universal_Matrix_RL_with_Requisite_Variety_Architecture_and_Behaviour",
+      "type": "Working Paper",
+      "date": "2025"
+    },
+    {
+      "id": "394401785",
+      "title": "Updated Occam's Razor for the Universal Matrix",
+      "url": "https://www.researchgate.net/publication/394401785",
+      "type": "Preprint",
+      "date": "2025"
+    },
+    {
+      "id": "392942469",
+      "title": "Universal Matrix: Least-Action Cartesian Construction Protocol",
+      "url": "https://www.researchgate.net/publication/392942469_Universal_Matrix_Least-Action_Cartesian_Construction_Protocol_Permitted_Tools_and_Primitive_Moves",
+      "type": "Preprint",
+      "date": "2025"
+    },
+    {
+      "id": "392231942",
+      "title": "Least-Action Cartesian Construction Protocol of the Universal Matrix",
+      "url": "https://www.researchgate.net/publication/392231942",
+      "type": "Preprint",
+      "date": "2025"
+    },
+    {
+      "id": "391399244",
+      "title": "Formal Notation for the Universal Matrix",
+      "url": "https://www.researchgate.net/publication/391399244",
+      "type": "Technical Report",
+      "date": "2025"
+    },
+    {
+      "id": "390582693",
+      "title": "Universal Matrix Co-Research",
+      "url": "https://www.researchgate.net/publication/390582693",
+      "type": "Working Paper",
+      "date": "2025"
+    },
+    {
+      "id": "389500782",
+      "title": "Universal Matrix Definition & Visual Proof v7",
+      "url": "https://www.researchgate.net/publication/389500782",
+      "type": "Technical Report",
+      "date": "2025"
+    },
+    {
+      "id": "389051537",
+      "title": "Universal Matrix Definition & Visual Proof v6",
+      "url": "https://www.researchgate.net/publication/389051537",
+      "type": "Technical Report",
+      "date": "2025"
+    },
+    {
+      "id": "389024613",
+      "title": "Universal Matrix Definition & Visual Proof v5",
+      "url": "https://www.researchgate.net/publication/389024613",
+      "type": "Technical Report",
+      "date": "2024"
+    },
+    {
+      "id": "388928262",
+      "title": "Universal Matrix Definition & Visual Proof v2",
+      "url": "https://www.researchgate.net/publication/388928262",
+      "type": "Technical Report",
+      "date": "2024"
+    },
+    {
+      "id": "388502572",
+      "title": "Universal Matrix Generation Algorithm",
+      "url": "https://www.researchgate.net/publication/388502572",
+      "type": "Technical Report",
+      "date": "2024"
+    },
+    {
+      "id": "385743303",
+      "title": "VINO AI Market Research Report",
+      "url": "https://www.researchgate.net/publication/385743303",
+      "type": "Report",
+      "date": "2024"
+    },
+    {
+      "id": "383196940",
+      "title": "Universal Matrix Definition & Visual Proof, Visual Heuristic, Logical Chain",
+      "url": "https://www.researchgate.net/publication/383196940_Universal_Matrix_Definition_Visual_Proof_Visual_Heuristic_Logical_Chain",
+      "type": "Technical Report",
+      "date": "2024"
+    },
+    {
+      "id": "3370632967",
+      "title": "Constructive Geometric Sequence Notation for the Universal Matrix",
+      "url": "https://www.researchgate.net/publication/3370632967_Constructive_Geometric_Sequence_Notation_for_the_Universal_Matrix",
+      "type": "Preprint",
+      "date": "2025"
+    }
+  ]
+}
