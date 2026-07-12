@@ -24,6 +24,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install PyPDF2
+
       - name: Run Backup Checker
         run: |
           python3 researchGate_backup/check_backups.py
