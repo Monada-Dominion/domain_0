@@ -27,7 +27,8 @@ jobs:
 
       - name: Run Backup Checker
         run: |
-          python3 researchGate_backup/check_backups.py
+          chmod +x ./scripts/run_backup.sh
+          ./scripts/run_backup.sh
           
       - name: Commit and Push changes
         run: |
